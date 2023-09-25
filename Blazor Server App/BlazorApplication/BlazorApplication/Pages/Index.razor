@@ -1,0 +1,71 @@
+﻿@page "/"
+
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.Grids
+
+<SfGrid TValue="Order" AllowPaging=true AllowSorting=true AllowFiltering=true
+    Toolbar="@(new List<string>() { "Search", "Add", "Edit", "Delete", "Cancel", "Update" })">
+        <GridEvents TValue="Order" OnActionFailure="FailureHandler"></GridEvents>
+    <GridEditSettings AllowAdding=true AllowEditing=true AllowDeleting=true Mode="EditMode.Batch"></GridEditSettings>
+    <SfDataManager Url="https://localhost:7131/graphql" GraphQLAdaptorOptions=@adaptorOptions Adaptor="Adaptors.GraphQLAdaptor"></SfDataManager>
+    <GridColumns>
+        <GridColumn Field=@nameof(Order.OrderID) HeaderText="Order ID" IsPrimaryKey=true TextAlign="TextAlign.Right" Width="120"></GridColumn>
+        <GridColumn Field=@nameof(Order.CustomerID) HeaderText="Customer Name" Width="150"></GridColumn>
+        <GridColumn Field=@nameof(Order.OrderDate) HeaderText="Order Date" Format="d"  TextAlign="TextAlign.Right" Width="130"></GridColumn>
+        <GridColumn Field=@nameof(Order.Freight) HeaderText="Freight" Format="C2" TextAlign="TextAlign.Right" Width="120"></GridColumn>
+    </GridColumns>
+</SfGrid>
+
+@code {
+    private void FailureHandler(FailureEventArgs args)
+    {
+    
+    }
+
+    private GraphQLAdaptorOptions adaptorOptions { get; set; } = new GraphQLAdaptorOptions
+    {
+        Query = @"
+            query ordersData($dataManager: DataManagerRequestInput!){
+                ordersData(dataManager: $dataManager) {
+                    count, result { OrderID, CustomerID, OrderDate, Freight } , aggregates
+                }
+            }",
+        Mutation = new GraphQLMutation
+        {
+            Insert = @"
+                mutation create($record: OrderInput!, $index: Int!, $action: String!, $additionalParameters: Any) {
+                  createBook(order: $record, index: $index, action: $action, additionalParameters: $additionalParameters) {
+                    OrderID, CustomerID, OrderDate, Freight
+                  }
+                }",
+            Update = @"
+                mutation update($record: OrderInput!, $action: String!, $primaryColumnName: String! , $primaryColumnValue: Int!, $additionalParameters: Any) {
+                  updateBook(order: $record, action: $action, primaryColumnName: $primaryColumnName, primaryColumnValue: $primaryColumnValue, additionalParameters: $additionalParameters) {
+                    OrderID, CustomerID, OrderDate, Freight
+                  }
+                }",
+            Delete = @"
+                mutation delete($primaryColumnValue: Int!, $action: String!, $primaryColumnName: String!, $additionalParameters: Any) {
+                  deleteBook(primaryColumnValue: $primaryColumnValue, action: $action, primaryColumnName: $primaryColumnName, additionalParameters: $additionalParameters) {
+                    OrderID, CustomerID, OrderDate, Freight
+                  }
+                }",
+            Batch = @"
+                mutation batch($changed: [OrderInput!], $added: [OrderInput!], $deleted: [OrderInput!], $action: String!, $primaryColumnName: String!, $additionalParameters: Any, $dropIndex: Int) {
+                  batchUpdate(changed: $changed, added: $added, deleted: $deleted, action: $action, primaryColumnName :$primaryColumnName, additionalParameters: $additionalParameters, dropIndex: $dropIndex) {
+                    OrderID, CustomerID, OrderDate, Freight
+                  }
+                }"
+        },
+            ResolverName = "OrdersData"
+    };
+
+    public class Order
+    {
+        public int? OrderID { get; set; }
+        public string CustomerID { get; set; }
+        public DateTime? OrderDate { get; set; }
+        public double? Freight { get; set; }
+    }
+}

@@ -1,0 +1,47 @@
+﻿@page "/complexbinding"
+
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.Grids
+
+<p>Complex column data binding</p>
+
+<SfGrid TValue="Order" AllowPaging=true>
+    <SfDataManager Url="https://localhost:7131/graphql" GraphQLAdaptorOptions=@adaptorOptions Adaptor="Adaptors.GraphQLAdaptor"></SfDataManager>
+    <GridColumns>
+        <GridColumn Field=@nameof(Order.OrderID) HeaderText="Order ID" IsPrimaryKey=true TextAlign="TextAlign.Right" Width="120"></GridColumn>
+        <GridColumn Field=@nameof(Order.CustomerID) HeaderText="Customer Name" Width="150"></GridColumn>
+        <GridColumn Field="Address.ShipCity" HeaderText="ShipCity" Width="150"></GridColumn>
+        <GridColumn Field=@nameof(Order.OrderDate) HeaderText="Order Date" Format="d" TextAlign="TextAlign.Right" Width="130"></GridColumn>
+        <GridColumn Field=@nameof(Order.Freight) HeaderText="Freight" Format="C2" TextAlign="TextAlign.Right" Width="120"></GridColumn>
+    </GridColumns>
+</SfGrid>
+
+@code {
+
+    private GraphQLAdaptorOptions adaptorOptions { get; set; } = new GraphQLAdaptorOptions
+        {
+            Query = @"
+            query ordersData($dataManager: DataManagerRequestInput!){
+                ordersData(dataManager: $dataManager) {
+                    count, result { OrderID, CustomerID, OrderDate, Freight, Address { ShipCity } } , aggregates
+                }
+            }",
+            ResolverName = "OrdersData"
+        };
+
+    public class Order
+    {
+        public int? OrderID { get; set; }
+        public string CustomerID { get; set; }
+        public DateTime? OrderDate { get; set; }
+        public double? Freight { get; set; }
+        public CustomerAddress Address { get; set; }
+    }
+
+    public class CustomerAddress
+    {
+        public string ShipCity { get; set; }
+        public string ShipCountry { get; set; }
+    }
+}

@@ -1,0 +1,61 @@
+﻿@page "/foreignkeysample"
+
+@using Syncfusion.Blazor
+@using Syncfusion.Blazor.Data
+@using Syncfusion.Blazor.Grids
+
+<p>ForeignKey Data Binding Sample</p>
+
+<SfGrid TValue="Order" AllowPaging=true>
+    <SfDataManager Url="https://localhost:7131/graphql" GraphQLAdaptorOptions=@adaptorOptions Adaptor="Adaptors.GraphQLAdaptor"></SfDataManager>
+    <GridColumns>
+        <GridColumn Field=@nameof(Order.OrderID) HeaderText="Order ID" IsPrimaryKey=true TextAlign="TextAlign.Right" Width="120"></GridColumn>
+        <GridColumn Field=@nameof(Order.CustomerID) HeaderText="Customer Name" Width="150"></GridColumn>
+        <GridForeignColumn TValue="EmployeeData" Field=@nameof(Order.EmployeeID) ForeignKeyValue="FirstName" Width="150">
+            <SfDataManager Url="https://localhost:7131/graphql" GraphQLAdaptorOptions=@ForeignKeyAdaptorOptions Adaptor="Adaptors.GraphQLAdaptor"></SfDataManager>
+        </GridForeignColumn>
+        <GridColumn Field=@nameof(Order.OrderDate) HeaderText="Order Date" Format="d"  TextAlign="TextAlign.Right" Width="130"></GridColumn>
+        <GridColumn Field=@nameof(Order.Freight) HeaderText="Freight" Format="C2" TextAlign="TextAlign.Right" Width="120"></GridColumn>
+    </GridColumns>
+</SfGrid>
+
+@code {
+
+    private GraphQLAdaptorOptions adaptorOptions { get; set; } = new GraphQLAdaptorOptions
+    {
+        Query = @"
+            query ordersData($dataManager: DataManagerRequestInput!){
+                ordersData(dataManager: $dataManager) {
+                    count, result { OrderID, CustomerID, EmployeeID, OrderDate, Freight } , aggregates
+                }
+            }",
+        ResolverName = "OrdersData"
+    };
+
+    public class Order
+    {
+        public int? OrderID { get; set; }
+        public int? EmployeeID { get; set; }
+        public string CustomerID { get; set; }
+        public DateTime? OrderDate { get; set; }
+        public double? Freight { get; set; }
+    }
+
+    //Foreign Key - RemoteData
+    public class EmployeeData
+    {
+        public int? EmployeeID { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+    }
+    private GraphQLAdaptorOptions ForeignKeyAdaptorOptions { get; set; } = new GraphQLAdaptorOptions
+        {
+            Query = @"
+            query employeeDataResolver($dataManager: DataManagerRequestInput!){
+                employeeDataResolver(dataManager: $dataManager) {
+                    count, result { EmployeeID, FirstName } , aggregates
+                }
+            }",
+            ResolverName = "EmployeeDataResolver"
+        };
+}
