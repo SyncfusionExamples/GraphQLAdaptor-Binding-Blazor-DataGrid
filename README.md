@@ -1,0 +1,1 @@
+# GraphQLAdaptor-Binding-Blazor-DataGrid
