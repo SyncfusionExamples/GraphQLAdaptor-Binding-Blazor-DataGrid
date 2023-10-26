@@ -7,7 +7,7 @@
 <SfGrid TValue="Order" AllowPaging=true AllowSorting=true AllowFiltering=true
     Toolbar="@(new List<string>() { "Search", "Add", "Edit", "Delete", "Cancel", "Update" })">
         <GridEvents TValue="Order" OnActionFailure="FailureHandler"></GridEvents>
-    <GridEditSettings AllowAdding=true AllowEditing=true AllowDeleting=true Mode="EditMode.Batch"></GridEditSettings>
+    <GridEditSettings AllowAdding=true AllowEditing=true AllowDeleting=true Mode="EditMode.Normal"></GridEditSettings>
     <SfDataManager Url="https://localhost:7131/graphql" GraphQLAdaptorOptions=@adaptorOptions Adaptor="Adaptors.GraphQLAdaptor"></SfDataManager>
     <GridColumns>
         <GridColumn Field=@nameof(Order.OrderID) HeaderText="Order ID" IsPrimaryKey=true TextAlign="TextAlign.Right" Width="120"></GridColumn>
@@ -35,19 +35,19 @@
         {
             Insert = @"
                 mutation create($record: OrderInput!, $index: Int!, $action: String!, $additionalParameters: Any) {
-                  createBook(order: $record, index: $index, action: $action, additionalParameters: $additionalParameters) {
+                  createOrder(order: $record, index: $index, action: $action, additionalParameters: $additionalParameters) {
                     OrderID, CustomerID, OrderDate, Freight
                   }
                 }",
             Update = @"
                 mutation update($record: OrderInput!, $action: String!, $primaryColumnName: String! , $primaryColumnValue: Int!, $additionalParameters: Any) {
-                  updateBook(order: $record, action: $action, primaryColumnName: $primaryColumnName, primaryColumnValue: $primaryColumnValue, additionalParameters: $additionalParameters) {
+                  updateOrder(order: $record, action: $action, primaryColumnName: $primaryColumnName, primaryColumnValue: $primaryColumnValue, additionalParameters: $additionalParameters) {
                     OrderID, CustomerID, OrderDate, Freight
                   }
                 }",
             Delete = @"
                 mutation delete($primaryColumnValue: Int!, $action: String!, $primaryColumnName: String!, $additionalParameters: Any) {
-                  deleteBook(primaryColumnValue: $primaryColumnValue, action: $action, primaryColumnName: $primaryColumnName, additionalParameters: $additionalParameters) {
+                  deleteOrder(primaryColumnValue: $primaryColumnValue, action: $action, primaryColumnName: $primaryColumnName, additionalParameters: $additionalParameters) {
                     OrderID, CustomerID, OrderDate, Freight
                   }
                 }",

@@ -5,13 +5,13 @@ namespace ASPNetCoreGraphQlServer.GraphQl
 {
     public class GraphQLMutation
     {
-        public Order CreateBook(Order order, int index, string action,
+        public Order CreateOrder(Order order, int index, string action,
             [GraphQLType(typeof(AnyType))] IDictionary<string, object> additionalParameters)
         {
             GraphQLQuery.Orders.Insert(index, order);
             return order;
         }
-        public Order UpdateBook(Order order, string action, string primaryColumnName, int primaryColumnValue,
+        public Order UpdateOrder(Order order, string action, string primaryColumnName, int primaryColumnValue,
             [GraphQLType(typeof(AnyType))] IDictionary<string, object> additionalParameters)
         {
             Order updatedOrder = GraphQLQuery.Orders.Where(x => x.OrderID == primaryColumnValue).FirstOrDefault();
@@ -21,7 +21,7 @@ namespace ASPNetCoreGraphQlServer.GraphQl
             updatedOrder.OrderDate = order.OrderDate;
             return updatedOrder;
         }
-        public Order DeleteBook(int primaryColumnValue, string action, string primaryColumnName,
+        public Order DeleteOrder(int primaryColumnValue, string action, string primaryColumnName,
             [GraphQLType(typeof(AnyType))] IDictionary<string, object> additionalParameters)
         {
             Order deletedOrder = GraphQLQuery.Orders.Where(x => x.OrderID == primaryColumnValue).FirstOrDefault();
