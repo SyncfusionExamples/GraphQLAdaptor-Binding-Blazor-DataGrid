@@ -7,7 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\source\blazor\graphql feature\BLAZ-84963-dev\ej2-blazor-source\Syncfusion.Blazor\Syncfusion.Blazor.csproj" />
+    <PackageReference Include="Syncfusion.Blazor" Version="23.1.42" />
   </ItemGroup>
+
 
 </Project>
