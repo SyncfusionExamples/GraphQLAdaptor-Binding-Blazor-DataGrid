@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repository demonstrates how to bind a Syncfusion Blazor DataGrid to a GraphQL data source using the DataManager GraphQL adaptor. The solution consists of two applications: an ASP.NET Core GraphQL server and a Blazor Server application that consumes GraphQL data through the Grid. The sample shows how DataManager communicates with a GraphQL endpoint and enables Grid data operations by sending GraphQL queries and request arguments to the server. This approach allows the Grid to retrieve only the required data while supporting server-side processing through GraphQL.
+This repository demonstrates how to bind a Syncfusion [Blazor DataGrid](https://www.syncfusion.com/blazor-components/blazor-datagrid) to a GraphQL data source using the DataManager GraphQL adaptor. The solution consists of two applications: an ASP.NET Core GraphQL server and a Blazor Server application that consumes GraphQL data through the Grid. The sample shows how DataManager communicates with a GraphQL endpoint and enables Grid data operations by sending GraphQL queries and request arguments to the server. This approach allows the Grid to retrieve only the required data while supporting server-side processing through GraphQL.
 
 ## Key Features
 
